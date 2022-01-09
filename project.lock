@@ -1,0 +1,77 @@
+generate_configs:
+  cmd: python -m spacy run generate_configs
+  script:
+    - python -m spacy init config configs/config.gpu.base.cfg -F --lang en --pipeline
+      textcat --optimize accuracy --gpu
+    - python -m spacy init config configs/config.cpu.base.cfg -F --lang en --pipeline
+      textcat --optimize efficiency
+    - python -m spacy init config configs/config.cpu.acc.cfg -F --lang en --pipeline
+      textcat --optimize accuracy
+    - cp configs/config.gpu.base.cfg configs/config.gpu.setfit.cfg
+    - sed -i'' -e  's/name = .*/name = "sst_setfit"/g' configs/config.gpu.setfit.cfg
+    - rm configs/config.gpu.setfit.cfg-e
+  deps: []
+  outs:
+    - path: configs/config.gpu.base.cfg
+      md5: 2a9fcc808379d802c710f8fcda9ce3b6
+    - path: configs/config.cpu.base.cfg
+      md5: 1d0e52a72697ca44cd478d7dd2335451
+    - path: configs/config.gpu.setfit.cfg
+      md5: 2a173ce6bd4d823ccb54ce98820670d0
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
+preprocess:
+  cmd: python -m spacy run preprocess
+  script:
+    - python scripts/process_data.py assets/sst-train-raw.tsv corpus/train.spacy --sample=128
+      --seed=1234
+    - python scripts/process_data.py assets/sst-dev-raw.tsv corpus/dev.spacy
+  deps: []
+  outs:
+    - path: corpus/train.spacy
+      md5: 2000bb1f7518bd15e55bc87d191c0607
+    - path: corpus/dev.spacy
+      md5: f4f31c9a17d1cb8c81883b3d9f8df1d3
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
+pretrain_setfit:
+  cmd: python -m spacy run pretrain_setfit
+  script:
+    - python scripts/train_setfit.py sentence-transformers/all-mpnet-base-v2 sst_setfit
+      train.spacy
+  deps:
+    - path: train.spacy
+      md5: 2000bb1f7518bd15e55bc87d191c0607
+  outs: []
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
+train_cpu:
+  cmd: python -m spacy run train_cpu
+  script:
+    - python -m spacy train configs/config.cpu.base.cfg --paths.train train.spacy
+      --paths.dev dev.spacy --output training-cpu-efficiency/
+  deps:
+    - path: configs/config.cpu.base.cfg
+      md5: 1d0e52a72697ca44cd478d7dd2335451
+    - path: train.spacy
+      md5: 2000bb1f7518bd15e55bc87d191c0607
+    - path: dev.spacy
+      md5: f4f31c9a17d1cb8c81883b3d9f8df1d3
+  outs: []
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
+train_cpu_acc:
+  cmd: python -m spacy run train_cpu_acc
+  script:
+    - python -m spacy train configs/config.cpu.acc.cfg --paths.train train.spacy --paths.dev
+      dev.spacy --output training-cpu-accuracy/
+  deps:
+    - path: configs/config.cpu.acc.cfg
+      md5: 7c71f32fd0ba9d16027f1ed493d1a26a
+    - path: train.spacy
+      md5: 2000bb1f7518bd15e55bc87d191c0607
+    - path: dev.spacy
+      md5: f4f31c9a17d1cb8c81883b3d9f8df1d3
+  outs: []
+  spacy_version: 3.2.1
+  spacy_git_version: 800737b41
