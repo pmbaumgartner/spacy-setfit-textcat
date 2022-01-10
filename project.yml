@@ -97,7 +97,10 @@ commands:
       - ${vars.configs.cpu_acc}
       - ${vars.configs.gpu_base}
       - ${vars.configs.gpu_setfit}
-
+  - name: eval_setfit
+    help: "Evaluate the setfit model"
+    script:
+      - python scripts/eval_setfit.py ${vars.model_name} ${vars.dev_clean}
   - name: train_cpu
     help: "Train the CPU based model"
     script:
@@ -114,7 +117,7 @@ commands:
     help: "Train the CPU accuracy model"
     script:
       - >-
-        python -m spacy train ${vars.configs.cpu_base}
+        python -m spacy train ${vars.configs.cpu_acc}
         --paths.train ${vars.train_clean}
         --paths.dev ${vars.dev_clean}
         --output models/cpu-accuracy/

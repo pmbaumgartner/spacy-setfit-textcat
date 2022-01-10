@@ -19,13 +19,13 @@ generate_configs:
   deps: []
   outs:
     - path: configs/config.cpu.base.cfg
-      md5: 827f99dcf24b595a3bf475273dffbed6
+      md5: 0f01b78a344b020a176a48d37bfb174f
     - path: configs/config.cpu.acc.cfg
-      md5: 873fd62b204cacbae7fba0e803b8ecb3
+      md5: 3bd70f288776c468a475289cd0a103d9
     - path: configs/config.gpu.base.cfg
-      md5: f1f0cc26cf127601e3b0469858e07e75
+      md5: 4b5c33849c2dd949dab553ea97c3918d
     - path: configs/config.gpu.setfit.cfg
-      md5: c246dcf651216defdc54df88c311f50e
+      md5: 0bf1e293fb58ee265e520cd5955dff0f
   spacy_version: 3.2.1
   spacy_git_version: 800737b41
 preprocess:
