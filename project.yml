@@ -3,30 +3,35 @@ description: >
   This project is an experiment with [spaCy](https://spacy.io)
   and few-shot text classification using
   [SetFit](http://archive.today/Kelkb)
-# Variables can be referenced across the project.yml using ${vars.var_name}
+
 vars:
-  gpu_base_config: "configs/config.gpu.base.cfg"
-  gpu_setfit_config: "configs/config.gpu.setfit.cfg"
-  cpu_base_config: "configs/config.cpu.base.cfg"
-  cpu_acc_config: "configs/config.cpu.acc.cfg"
+  # configs
+  configs:
+    gpu_base: "configs/config.gpu.base.cfg"
+    gpu_setfit: "configs/config.gpu.setfit.cfg"
+    cpu_base: "configs/config.cpu.base.cfg"
+    cpu_acc: "configs/config.cpu.acc.cfg"
+    templates:
+      wandb: "configs/wandb.template"
+  # setfit
   base_model: "sentence-transformers/all-mpnet-base-v2"
   model_name: "models/sst_setfit"
-  version: "0.0.0"
+  # data
   train_raw: "assets/sst-train-raw.tsv"
   dev_raw: "assets/sst-dev-raw.tsv"
   train_clean: "corpus/train.spacy"
   dev_clean: "corpus/dev.spacy"
+  # global
   gpu_id: -1
   seed: 1234
+  # training
+  n_train: 256
+  train_epochs: 100
+  eval_frequency: 100
 spacy_version: ">=3.2.1,<4.0.0"
 
-# These are the directories that the project needs. The project CLI will make
-# sure that they always exist.
 directories: ["assets", "configs", "scripts", "corpus", "models"]
 
-# Assets that should be downloaded or available in the directory. We're shipping
-# them with the project, so they won't have to be downloaded. But the
-# 'project assets' command still lets you verify that the checksums match.
 assets:
   - dest: "${vars.train_raw}"
     url: https://raw.githubusercontent.com/clairett/pytorch-sentiment-classification/master/data/SST2/train.tsv
@@ -35,24 +40,17 @@ assets:
     url: https://raw.githubusercontent.com/clairett/pytorch-sentiment-classification/master/data/SST2/test.tsv
     description: "SST2 Test Data"
 
-# Workflows are sequences of commands (see below) executed in order. You can
-# run them via "spacy project run [workflow]". If a commands's inputs/outputs
-# haven't changed, it won't be re-run.
 workflows:
   setup:
     - preprocess
-    - pretrain_setfit
     - generate_configs
+    - pretrain_setfit
 
-# Project commands, specified in a style similar to CI config files (e.g. Azure
-# pipelines). The name is the command name that lets you trigger the command
-# via "spacy project run [command] [path]". The help message is optional and
-# shown when executing "spacy project run [optional command] [path] --help".
 commands:
   - name: preprocess
     help: "Convert data into spacy format"
     script:
-      - python scripts/process_data.py ${vars.train_raw} ${vars.train_clean} --sample=128 --seed=${vars.seed}
+      - python scripts/process_data.py ${vars.train_raw} ${vars.train_clean} --sample=${vars.n_train} --seed=${vars.seed}
       - python scripts/process_data.py ${vars.dev_raw} ${vars.dev_clean}
     outputs:
       - ${vars.train_clean}
@@ -67,72 +65,86 @@ commands:
     help: "Create the configs for training comparison"
     script:
       - >-
-        python -m spacy init config ${vars.gpu_base_config} -F --lang en
+        python -m spacy init config ${vars.configs.gpu_base} -F --lang en
         --pipeline textcat
         --optimize accuracy
         --gpu
       - >-
-        python -m spacy init config ${vars.cpu_base_config} -F --lang en
+        python -m spacy init config ${vars.configs.cpu_base} -F --lang en
         --pipeline textcat
         --optimize efficiency
       - >-
-        python -m spacy init config ${vars.cpu_acc_config} -F --lang en
+        python -m spacy init config ${vars.configs.cpu_acc} -F --lang en
         --pipeline textcat
         --optimize accuracy
-      - cp ${vars.gpu_base_config} ${vars.gpu_setfit_config}
-      - sed -i'' -e  's/name = .*/name = "${vars.model_name}"/g' ${vars.gpu_setfit_config}
-      - "rm ${vars.gpu_setfit_config}-e"
+      - cp ${vars.configs.gpu_base} ${vars.configs.gpu_setfit}
+      # https://backreference.org/2010/02/20/using-different-delimiters-in-sed/
+      # https://singhkays.com/blog/sed-error-i-expects-followed-by-text/
+      - sed -i'' -e 's,name = .*,name = "${vars.model_name}",g' ${vars.configs.gpu_setfit}
+      - >-
+        find configs/ -type f -name '*.cfg' -exec
+        sed -i'' -e 's,max_epochs = .*,max_epochs = ${vars.train_epochs},g' {} +
+      - >-
+        find configs/ -type f -name '*.cfg' -exec
+        sed -i'' -e 's,eval_frequency = .*,eval_frequency = ${vars.eval_frequency},g' {} +
+      - >-
+        find configs/ -type f -name '*.cfg' -exec
+        python scripts/replace_config_section.py ${vars.configs.templates.wandb} {} \;
+
+      - find configs/ -type f -name '*.cfg-e' -exec rm {} +
     outputs:
-      - ${vars.gpu_base_config}
-      - ${vars.cpu_base_config}
-      - ${vars.gpu_setfit_config}
+      - ${vars.configs.cpu_base}
+      - ${vars.configs.cpu_acc}
+      - ${vars.configs.gpu_base}
+      - ${vars.configs.gpu_setfit}
+
   - name: train_cpu
     help: "Train the CPU based model"
     script:
       - >-
-        python -m spacy train ${vars.cpu_base_config}
+        python -m spacy train ${vars.configs.cpu_base}
         --paths.train ${vars.train_clean}
         --paths.dev ${vars.dev_clean}
         --output models/cpu-efficiency/
     deps:
-      - ${vars.cpu_base_config}
+      - ${vars.configs.cpu_base}
       - ${vars.train_clean}
       - ${vars.dev_clean}
   - name: train_cpu_acc
     help: "Train the CPU accuracy model"
     script:
       - >-
-        python -m spacy train ${vars.cpu_acc_config}
+        python -m spacy train ${vars.configs.cpu_base}
         --paths.train ${vars.train_clean}
         --paths.dev ${vars.dev_clean}
         --output models/cpu-accuracy/
     deps:
-      - ${vars.cpu_acc_config}
+      - ${vars.configs.cpu_base}
       - ${vars.train_clean}
       - ${vars.dev_clean}
   - name: train_gpu_base
     help: "Train the GPU base (roberta) model"
     script:
       - >-
-        python -m spacy train ${vars.gpu_base_config}
+        python -m spacy train ${vars.configs.gpu_base}
         --paths.train ${vars.train_clean}
         --paths.dev ${vars.dev_clean}
         --output models/gpu-base/
         --gpu-id 0
     deps:
-      - ${vars.gpu_base_config}
+      - ${vars.configs.gpu_base}
       - ${vars.train_clean}
       - ${vars.dev_clean}
   - name: train_gpu_setfit
     help: "Train the GPU SetFit model"
     script:
       - >-
-        python -m spacy train ${vars.gpu_setfit_config}
+        python -m spacy train ${vars.configs.gpu_setfit}
         --paths.train ${vars.train_clean}
         --paths.dev ${vars.dev_clean}
         --output models/gpu-setfit/
         --gpu-id 0
     deps:
-      - ${vars.gpu_setfit_config}
+      - ${vars.configs.gpu_setfit}
       - ${vars.train_clean}
       - ${vars.dev_clean}

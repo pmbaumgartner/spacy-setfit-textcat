@@ -8,16 +8,24 @@ generate_configs:
     - python -m spacy init config configs/config.cpu.acc.cfg -F --lang en --pipeline
       textcat --optimize accuracy
     - cp configs/config.gpu.base.cfg configs/config.gpu.setfit.cfg
-    - sed -i'' -e  's/name = .*/name = "sst_setfit"/g' configs/config.gpu.setfit.cfg
-    - rm configs/config.gpu.setfit.cfg-e
+    - sed -i'' -e 's,name = .*,name = "models/sst_setfit",g' configs/config.gpu.setfit.cfg
+    - find configs/ -type f -name '*.cfg' -exec sed -i'' -e 's,max_epochs = .*,max_epochs
+      = 100,g' {} +
+    - find configs/ -type f -name '*.cfg' -exec sed -i'' -e 's,eval_frequency = .*,eval_frequency
+      = 100,g' {} +
+    - find configs/ -type f -name '*.cfg' -exec python scripts/replace_config_section.py
+      configs/wandb.template {} \;
+    - find configs/ -type f -name '*.cfg-e' -exec rm {} +
   deps: []
   outs:
-    - path: configs/config.gpu.base.cfg
-      md5: 2a9fcc808379d802c710f8fcda9ce3b6
     - path: configs/config.cpu.base.cfg
-      md5: 1d0e52a72697ca44cd478d7dd2335451
+      md5: 827f99dcf24b595a3bf475273dffbed6
+    - path: configs/config.cpu.acc.cfg
+      md5: 873fd62b204cacbae7fba0e803b8ecb3
+    - path: configs/config.gpu.base.cfg
+      md5: f1f0cc26cf127601e3b0469858e07e75
     - path: configs/config.gpu.setfit.cfg
-      md5: 2a173ce6bd4d823ccb54ce98820670d0
+      md5: c246dcf651216defdc54df88c311f50e
   spacy_version: 3.2.1
   spacy_git_version: 800737b41
 preprocess:

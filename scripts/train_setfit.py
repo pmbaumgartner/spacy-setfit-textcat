@@ -1,6 +1,6 @@
-from setfit import SetFitClassifier
-import typer
 import spacy
+import typer
+from setfit import SetFitClassifier
 
 
 def main(base_model: str, model_name: str, data: str, data_iter=5):

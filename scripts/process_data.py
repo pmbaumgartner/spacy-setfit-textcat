@@ -1,8 +1,9 @@
 from typing import Optional
-import spacy
-from spacy.tokens import DocBin
-import typer
+
 import pandas as pd
+import spacy
+import typer
+from spacy.tokens import DocBin
 from wasabi import msg
 
 

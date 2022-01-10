@@ -1,0 +1,4 @@
+[training.logger]
+@loggers = "spacy.WandbLogger.v3"
+project_name = "spacy-setfit-textcat"
+remove_config_values = []
