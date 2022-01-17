@@ -90,7 +90,6 @@ commands:
       - >-
         find configs/ -type f -name '*.cfg' -exec
         python scripts/replace_config_section.py ${vars.configs.templates.wandb} {} \;
-
       - find configs/ -type f -name '*.cfg-e' -exec rm {} +
     outputs:
       - ${vars.configs.cpu_base}
