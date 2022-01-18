@@ -31,7 +31,7 @@ vars:
   n_train: 256
   train_epochs: 100
   eval_frequency: 10
-  patience: 20
+  patience: 40
 spacy_version: ">=3.2.1,<4.0.0"
 
 directories: ["assets", "configs", "scripts", "corpus", "models"]
