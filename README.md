@@ -4,7 +4,7 @@
 
 This project is an experiment with [spaCy](https://spacy.io) and few-shot text classification using [SetFit](http://archive.today/Kelkb)
 
-Run project in colab for GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1vaqaVAQ21LD07m2Z0l8ZOwC6cLs-zD5Z?usp=sharing)
+Run project in colab for GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1CvGEZC0I9_v8gWrBxSJQ4Z8JGPJz-HYb?usp=sharing)
 
 
 ## 📋 project.yml

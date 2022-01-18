@@ -4,6 +4,9 @@ description: >
   and few-shot text classification using
   [SetFit](http://archive.today/Kelkb)
 
+  Run project in colab for GPU: 
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1CvGEZC0I9_v8gWrBxSJQ4Z8JGPJz-HYb?usp=sharing)
+
 vars:
   # configs
   configs:
