@@ -28,6 +28,7 @@ vars:
   n_train: 256
   train_epochs: 100
   eval_frequency: 10
+  patience: 20
 spacy_version: ">=3.2.1,<4.0.0"
 
 directories: ["assets", "configs", "scripts", "corpus", "models"]
@@ -87,6 +88,9 @@ commands:
       - >-
         find configs/ -type f -name '*.cfg' -exec
         sed -i'' -e 's,eval_frequency = .*,eval_frequency = ${vars.eval_frequency},g' {} +
+      - >-
+        find configs/ -type f -name '*.cfg' -exec
+        sed -i'' -e 's,patience = .*,patience = ${vars.patience},g' {} +
       - >-
         find configs/ -type f -name '*.cfg' -exec
         python scripts/replace_config_section.py ${vars.configs.templates.wandb} {} \;
