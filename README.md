@@ -4,6 +4,8 @@
 
 This project is an experiment with [spaCy](https://spacy.io) and few-shot text classification using [SetFit](http://archive.today/Kelkb)
 
+Run project in colab for GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1vaqaVAQ21LD07m2Z0l8ZOwC6cLs-zD5Z?usp=sharing)
+
 
 ## 📋 project.yml
 
@@ -22,6 +24,7 @@ Commands are only re-run if their inputs have changed.
 | `preprocess` | Convert data into spacy format |
 | `pretrain_setfit` | Convert data into spacy format |
 | `generate_configs` | Create the configs for training comparison |
+| `eval_setfit` | Evaluate the setfit model |
 | `train_cpu` | Train the CPU based model |
 | `train_cpu_acc` | Train the CPU accuracy model |
 | `train_gpu_base` | Train the GPU base (roberta) model |
@@ -36,7 +39,7 @@ inputs have changed.
 
 | Workflow | Steps |
 | --- | --- |
-| `setup` | `preprocess` &rarr; `pretrain_setfit` &rarr; `generate_configs` |
+| `setup` | `preprocess` &rarr; `generate_configs` &rarr; `pretrain_setfit` |
 
 ### 🗂 Assets
 
