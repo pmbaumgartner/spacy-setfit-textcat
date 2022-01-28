@@ -72,12 +72,12 @@ commands:
       - ${vars.train_clean}-${vars.n_train4}
       - ${vars.dev_clean}
   - name: pretrain_setfit
-    help: "Convert data into spacy format"
+    help: "Pretrain Setfit Model"
     script:
       - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train1} ${vars.train_clean}-${vars.n_train1}.spacy
-      - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train1} ${vars.train_clean}-${vars.n_train2}.spacy
-      - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train1} ${vars.train_clean}-${vars.n_train3}.spacy
-      - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train1} ${vars.train_clean}-${vars.n_train4}.spacy
+      - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train2} ${vars.train_clean}-${vars.n_train2}.spacy
+      - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train3} ${vars.train_clean}-${vars.n_train3}.spacy
+      - python scripts/train_setfit.py ${vars.base_model} ${vars.model_name}-${vars.n_train4} ${vars.train_clean}-${vars.n_train4}.spacy
     deps:
       - ${vars.train_clean}-${vars.n_train1}.spacy
       - ${vars.train_clean}-${vars.n_train2}.spacy
