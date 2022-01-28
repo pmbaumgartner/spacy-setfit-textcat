@@ -155,3 +155,4 @@ cython_debug/
 assets/
 corpus/
 models/
+wandb/
