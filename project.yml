@@ -195,19 +195,19 @@ commands:
         python -m spacy train ${vars.configs.gpu_base}
         --paths.train ${vars.train_clean}-${vars.n_train1}.spacy
         --paths.dev ${vars.dev_clean}
-        --output models/gpu-base-${vars.n_train4}/
+        --output models/gpu-base-${vars.n_train1}/
         --gpu-id 0
       - >-
         python -m spacy train ${vars.configs.gpu_base}
         --paths.train ${vars.train_clean}-${vars.n_train2}.spacy
         --paths.dev ${vars.dev_clean}
-        --output models/gpu-base-${vars.n_train4}/
+        --output models/gpu-base-${vars.n_train2}/
         --gpu-id 0
       - >-
         python -m spacy train ${vars.configs.gpu_base}
         --paths.train ${vars.train_clean}-${vars.n_train3}.spacy
         --paths.dev ${vars.dev_clean}
-        --output models/gpu-base-${vars.n_train4}/
+        --output models/gpu-base-${vars.n_train3}/
         --gpu-id 0
       - >-
         python -m spacy train ${vars.configs.gpu_base}
@@ -235,19 +235,19 @@ commands:
         python -m spacy train ${vars.configs.gpu_setfit}
         --paths.train ${vars.train_clean}-${vars.n_train2}.spacy
         --paths.dev ${vars.dev_clean}
-        --output models/gpu-setfit-${vars.n_train1}/
+        --output models/gpu-setfit-${vars.n_train2}/
         --gpu-id 0
       - >-
         python -m spacy train ${vars.configs.gpu_setfit}
         --paths.train ${vars.train_clean}-${vars.n_train3}.spacy
         --paths.dev ${vars.dev_clean}
-        --output models/gpu-setfit-${vars.n_train1}/
+        --output models/gpu-setfit-${vars.n_train3}/
         --gpu-id 0
       - >-
         python -m spacy train ${vars.configs.gpu_setfit}
         --paths.train ${vars.train_clean}-${vars.n_train4}.spacy
         --paths.dev ${vars.dev_clean}
-        --output models/gpu-setfit-${vars.n_train1}/
+        --output models/gpu-setfit-${vars.n_train4}/
         --gpu-id 0
     deps:
       - ${vars.configs.gpu_setfit}
