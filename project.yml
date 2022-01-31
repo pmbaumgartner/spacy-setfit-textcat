@@ -263,49 +263,49 @@ commands:
          python -m spacy package
          ./models/gpu-setfit-${vars.n_train1}/model-best
          ./models/build 
-         --name gpu-setfit-${vars.n_train1}
+         --name gpu_setfit_${vars.n_train1}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-setfit-${vars.n_train2}/model-best
          ./models/build 
-         --name gpu-setfit-${vars.n_train2}
+         --name gpu_setfit_${vars.n_train2}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-setfit-${vars.n_train3}/model-best
          ./models/build 
-         --name gpu-setfit-${vars.n_train3}
+         --name gpu_setfit_${vars.n_train3}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-setfit-${vars.n_train4}/model-best
          ./models/build 
-         --name gpu-setfit-${vars.n_train4}
+         --name gpu_setfit_${vars.n_train4}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-base-${vars.n_train1}/model-best
          ./models/build 
-         --name gpu-base-${vars.n_train1}
+         --name gpu_base_${vars.n_train1}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-base-${vars.n_train2}/model-best
          ./models/build 
-         --name gpu-base-${vars.n_train2}
+         --name gpu_base_${vars.n_train2}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-base-${vars.n_train3}/model-best
          ./models/build 
-         --name gpu-base-${vars.n_train3}
+         --name gpu_base_${vars.n_train3}
          --build wheel
       - >-
          python -m spacy package
          ./models/gpu-base-${vars.n_train4}/model-best
          ./models/build 
-         --name gpu-base-${vars.n_train4}
+         --name gpu_base_${vars.n_train4}
          --build wheel
     deps:
       - ./models/gpu-setfit-${vars.n_train1}/model-best
