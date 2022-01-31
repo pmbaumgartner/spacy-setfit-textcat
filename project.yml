@@ -256,3 +256,63 @@ commands:
       - ${vars.train_clean}-${vars.n_train3}.spacy
       - ${vars.train_clean}-${vars.n_train4}.spacy
       - ${vars.dev_clean}
+  - name: train_gpu_setfit
+    help: "Package GPU Models"
+    script:
+      - >-
+         python -m spacy package
+         ./models/gpu-setfit-${vars.n_train1}/model-best
+         ./models/build 
+         --name gpu-setfit-${vars.n_train1}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-setfit-${vars.n_train2}/model-best
+         ./models/build 
+         --name gpu-setfit-${vars.n_train2}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-setfit-${vars.n_train3}/model-best
+         ./models/build 
+         --name gpu-setfit-${vars.n_train3}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-setfit-${vars.n_train4}/model-best
+         ./models/build 
+         --name gpu-setfit-${vars.n_train4}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-base-${vars.n_train1}/model-best
+         ./models/build 
+         --name gpu-base-${vars.n_train1}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-base-${vars.n_train2}/model-best
+         ./models/build 
+         --name gpu-base-${vars.n_train2}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-base-${vars.n_train3}/model-best
+         ./models/build 
+         --name gpu-base-${vars.n_train3}
+         --build wheel
+      - >-
+         python -m spacy package
+         ./models/gpu-base-${vars.n_train4}/model-best
+         ./models/build 
+         --name gpu-base-${vars.n_train4}
+         --build wheel
+    deps:
+      - ./models/gpu-setfit-${vars.n_train1}/model-best
+      - ./models/gpu-setfit-${vars.n_train2}/model-best
+      - ./models/gpu-setfit-${vars.n_train3}/model-best
+      - ./models/gpu-setfit-${vars.n_train4}/model-best
+      - ./models/gpu-base-${vars.n_train1}/model-best
+      - ./models/gpu-base-${vars.n_train2}/model-best
+      - ./models/gpu-base-${vars.n_train3}/model-best
+      - ./models/gpu-base-${vars.n_train4}/model-best
