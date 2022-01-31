@@ -256,7 +256,7 @@ commands:
       - ${vars.train_clean}-${vars.n_train3}.spacy
       - ${vars.train_clean}-${vars.n_train4}.spacy
       - ${vars.dev_clean}
-  - name: train_gpu_setfit
+  - name: package_gpu_models
     help: "Package GPU Models"
     script:
       - >-
